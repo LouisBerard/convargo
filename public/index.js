@@ -108,7 +108,7 @@ function updateCommission(deliveriesList){
     var commissionValue = deliveriesList[i].price * 0.3
     deliveriesList[i].commission.insurance = commissionValue / 2
     commissionValue = deliveriesList[i].commission.insurance
-    deliveriesList[i].commission.treasury = 1 * Math.floor(deliveriesList[i].distance/500);
+    deliveriesList[i].commission.treasury = 1 * Math.floor(deliveriesList[i].distance/500) + 1;
     commissionValue = commissionValue - deliveriesList[i].commission.treasury
     deliveries[i].commission.convargo = commissionValue
   }
