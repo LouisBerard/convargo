@@ -77,13 +77,13 @@ function priceCompute(truckerIdSearch, distanceTravel, volumeTravel,truckerList)
   for (var i = 0; i < truckerList.length; i++) {
     if (truckerList[i].id.localeCompare(truckerIdSearch) == 0) {
       distance = truckerList[i].pricePerKm * distanceTravel
-      volume = truckerList[i].pricePerVolume * volumeTravel * sizeReduction(volumeTravel)
+      volume = truckerList[i].pricePerVolume * volumeTravel * sizeReductionPourcentage(volumeTravel)
     }
   }
   return distance + volume;
 }
 
-function sizeReduction(volumeTravel){
+function sizeReductionPourcentage(volumeTravel){
   var res = 1
   if(volumeTravel > 25){
     res = 0.5
@@ -101,6 +101,19 @@ function updatePrice(deleveriesList,truckerList){
   }
 }
 updatePrice(deliveries,truckers)
+
+
+function updateCommission(deliveriesList){
+  for (var i = 0; i < deliveriesList.length; i++) {
+    var commissionValue = deliveriesList[i].price * 0.3
+    deliveriesList[i].commission.insurance = commissionValue / 2
+    commissionValue = deliveriesList[i].commission.insurance
+    deliveriesList[i].commission.treasury = 1 * Math.floor(deliveriesList[i].distance/500);
+    commissionValue = commissionValue - deliveriesList[i].commission.treasury
+    deliveries[i].commission.convargo = commissionValue
+  }
+}
+updateCommission(deliveries)
 
 //list of actors for payment
 //useful from exercise 5
