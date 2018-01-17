@@ -71,6 +71,25 @@ var deliveries = [{
   }
 }];
 
+function priceCompute(truckerIdSearch, distanceTravel, volumeTravel,truckerList) {
+  var distance = 0
+  var volume = 0
+  for (var i = 0; i < truckerList.length; i++) {
+    if (truckerList[i].id.localeCompare(truckerIdSearch) == 0) {
+      distance = truckerList[i].pricePerKm * distanceTravel
+      volume = truckerList[i].pricePerVolume * volumeTravel
+    }
+  }
+  return distance + volume;
+}
+
+function updatePrice(deleveriesList,truckerList){
+  for (var i = 0; i < deleveriesList.length; i++) {
+    deleveriesList[i].price=priceCompute(deleveriesList[i].truckerId,deleveriesList[i].distance,deleveriesList[i].volume,truckerList)
+  }
+}
+updatePrice(deliveries,truckers)
+
 //list of actors for payment
 //useful from exercise 5
 const actors = [{
