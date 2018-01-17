@@ -71,29 +71,21 @@ var deliveries = [{
   }
 }];
 
-function priceCompute(truckerIdSearch, distanceTravel, volumeTravel,truckerList, deleveriesOption) {
+function priceCompute(truckerIdSearch, distanceTravel, volumeTravel, truckerList) {
   var distance = 0
   var volume = 0
   for (var i = 0; i < truckerList.length; i++) {
     if (truckerList[i].id.localeCompare(truckerIdSearch) == 0) {
       distance = truckerList[i].pricePerKm * distanceTravel
-      volume = (truckerList[i].pricePerVolume + addOption(deleveriesOption)) * volumeTravel * sizeReductionPourcentage(volumeTravel)
+      volume = truckerList[i].pricePerVolume * volumeTravel * sizeReductionPourcentage(volumeTravel)
     }
   }
   return distance + volume;
 }
 
-function addOption(deleveriesOption){
-  var res = 0
-  if(deleveriesOption == true){
-      res = 1
-  }
-  return res
-}
-
-function sizeReductionPourcentage(volumeTravel){
+function sizeReductionPourcentage(volumeTravel) {
   var res = 1
-  if(volumeTravel > 25){
+  if (volumeTravel > 25) {
     res = 0.5
   } else if (volumeTravel > 10) {
     res = 0.7
@@ -103,25 +95,35 @@ function sizeReductionPourcentage(volumeTravel){
   return res
 }
 
-function updatePrice(deleveriesList,truckerList){
+function updatePrice(deleveriesList, truckerList) {
   for (var i = 0; i < deleveriesList.length; i++) {
-    deleveriesList[i].price=priceCompute(deleveriesList[i].truckerId,deleveriesList[i].distance,deleveriesList[i].volume,truckerList,deleveriesList[i].options.deductibleReduction)
+    deleveriesList[i].price = priceCompute(deleveriesList[i].truckerId, deleveriesList[i].distance, deleveriesList[i].volume, truckerList)
   }
 }
-updatePrice(deliveries,truckers)
+updatePrice(deliveries, truckers)
 
 
-function updateCommission(deliveriesList){
+function updateCommission(deliveriesList) {
   for (var i = 0; i < deliveriesList.length; i++) {
     var commissionValue = deliveriesList[i].price * 0.3
     deliveriesList[i].commission.insurance = commissionValue / 2
     commissionValue = deliveriesList[i].commission.insurance
-    deliveriesList[i].commission.treasury = 1 * Math.floor(deliveriesList[i].distance/500)+1;
-    commissionValue = commissionValue - deliveriesList[i].commission.treasury
+    deliveriesList[i].commission.treasury = 1 * Math.floor(deliveriesList[i].distance / 500) + 1;
+    commissionValue -= deliveriesList[i].commission.treasury
     deliveries[i].commission.convargo = commissionValue
   }
 }
 updateCommission(deliveries)
+
+function updateOption(deliveriesList) {
+  for (var i = 0; i < deliveriesList.length; i++) {
+    if (deliveriesList[i].options.deductibleReduction == true) {
+      deliveriesList[i].price += deliveriesList[i].volume
+      deliveriesList[i].commission.convargo += deliveriesList[i].volume
+    }
+  }
+}
+updateOption(deliveries)
 
 
 
