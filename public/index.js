@@ -77,13 +77,13 @@ function priceCompute(truckerIdSearch, distanceTravel, volumeTravel,truckerList)
   for (var i = 0; i < truckerList.length; i++) {
     if (truckerList[i].id.localeCompare(truckerIdSearch) == 0) {
       distance = truckerList[i].pricePerKm * distanceTravel
-      volume = truckerList[i].pricePerVolume * volumeTravel * sizeReduction(volumeTravel)
+      volume = truckerList[i].pricePerVolume * volumeTravel * sizeReductionPourcentage(volumeTravel)
     }
   }
   return distance + volume;
 }
 
-function sizeReduction(volumeTravel){
+function sizeReductionPourcentage(volumeTravel){
   var res = 1
   if(volumeTravel > 25){
     res = 0.5
