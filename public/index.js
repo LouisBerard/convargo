@@ -71,16 +71,24 @@ var deliveries = [{
   }
 }];
 
-function priceCompute(truckerIdSearch, distanceTravel, volumeTravel,truckerList) {
+function priceCompute(truckerIdSearch, distanceTravel, volumeTravel,truckerList, deleveriesOption) {
   var distance = 0
   var volume = 0
   for (var i = 0; i < truckerList.length; i++) {
     if (truckerList[i].id.localeCompare(truckerIdSearch) == 0) {
       distance = truckerList[i].pricePerKm * distanceTravel
-      volume = truckerList[i].pricePerVolume * volumeTravel * sizeReductionPourcentage(volumeTravel)
+      volume = (truckerList[i].pricePerVolume + addOption(deleveriesOption)) * volumeTravel * sizeReductionPourcentage(volumeTravel)
     }
   }
   return distance + volume;
+}
+
+function addOption(deleveriesOption){
+  var res = 0
+  if(deleveriesOption == true){
+      res = 1
+  }
+  return res
 }
 
 function sizeReductionPourcentage(volumeTravel){
@@ -97,7 +105,7 @@ function sizeReductionPourcentage(volumeTravel){
 
 function updatePrice(deleveriesList,truckerList){
   for (var i = 0; i < deleveriesList.length; i++) {
-    deleveriesList[i].price=priceCompute(deleveriesList[i].truckerId,deleveriesList[i].distance,deleveriesList[i].volume,truckerList)
+    deleveriesList[i].price=priceCompute(deleveriesList[i].truckerId,deleveriesList[i].distance,deleveriesList[i].volume,truckerList,deleveriesList[i].options.deductibleReduction)
   }
 }
 updatePrice(deliveries,truckers)
@@ -114,6 +122,8 @@ function updateCommission(deliveriesList){
   }
 }
 updateCommission(deliveries)
+
+
 
 //list of actors for payment
 //useful from exercise 5
