@@ -200,6 +200,38 @@ const actors = [{
   }]
 }];
 
+function payActors(actorsList, deliveriesList) {
+  for (var i = 0; i < actorsList.length; i++) {
+    var deliveriesFound = 0
+    for (var k = 0; k < deliveriesList.length; k++) {
+      if (actorsList[i].deliveryId.localeCompare(deliveriesList[k].id) == 0) {
+        deliveriesFound = deliveriesList[k]
+      }
+    }
+    for (var j = 0; j < actorsList[i].payment.length; j++) {
+      switch (j) {
+        case 0:
+          actorsList[i].payment[j].amount = deliveriesFound.price
+          break;
+        case 1:
+          actorsList[i].payment[j].amount = deliveriesFound.price - deliveriesFound.commission.insurance - deliveriesFound.commission.treasury - deliveriesFound.commission.convargo
+          break;
+        case 2:
+          actorsList[i].payment[j].amount = deliveriesFound.commission.insurance
+          break;
+        case 3:
+          actorsList[i].payment[j].amount = deliveriesFound.commission.treasury
+          break;
+        case 4:
+          actorsList[i].payment[j].amount = deliveriesFound.commission.convargo
+          break;
+      }
+    }
+  }
+}
+
+payActors(actors, deliveries)
+
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
